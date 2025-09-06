@@ -32,13 +32,19 @@ def trading_formula():
         rhs = rhs.replace(r'\exp', 'math.exp')
         rhs = rhs.replace(r'\log', 'math.log')
         rhs = re.sub(r'\\frac\{([^}]+)\}\{([^}]+)\}', r'(\1)/(\2)', rhs)
+        # Handle e^{x}
+        rhs = re.sub(r'e\^\{([^}]+)\}', r'math.exp(\1)', rhs)
+        # Handle \ln
+        rhs = rhs.replace(r'\ln', 'math.log')
         # Handle Greek letters
         rhs = rhs.replace(r'\beta', 'beta')
         rhs = rhs.replace(r'\alpha', 'alpha')
         rhs = rhs.replace(r'\sigma', 'sigma')
-        # Handle subscripts
-        rhs = rhs.replace('[', '_')
-        rhs = rhs.replace(']', '')
+        # Handle brackets
+        rhs = rhs.replace(r'\left(', '(')
+        rhs = rhs.replace(r'\right)', ')')
+        rhs = rhs.replace(r'\left[', '[')
+        rhs = rhs.replace(r'\right]', ']')
         # Handle implicit multiplication
         rhs = re.sub(r'(\w)\s*\(', r'\1*(', rhs)
         rhs = re.sub(r'\)\s*(\w)', r')*\1', rhs)
